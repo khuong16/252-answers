@@ -1,0 +1,23 @@
+ON LUYEN TRAC NGHIEM - GOI DONG GOI
+
+CACH MO NHANH (khong can cai gi):
+  - Bam dup file  on-luyen-standalone.html  (du lieu da nhung san, chay offline)
+
+CACH DUNG BAN CO FILE JSON RIENG:
+  - Mo terminal trong thu muc nay, chay:  python -m http.server 8000
+  - Mo trinh duyet:  http://localhost:8000
+  - Muon sua/them cau hoi: sua data/siquan.json hoac data/qncn.json
+    (sua xong F5 la thay doi). Luu y: neu sua JSON thi file standalone
+    KHONG tu cap nhat, chi ban index.html moi doc JSON.
+
+CAC FILE:
+  index.html, styles.css, app.js      Ban web doc du lieu tu data/*.json
+  data/siquan.json                    Bo cau hoi Si quan (300 cau)
+  data/qncn.json                      Bo cau hoi QNCN (252 cau)
+  on-luyen-standalone.html            Ban 1 file, du lieu nhung san
+  ban-goc-backup/                     Ban sao nguyen ven web goc
+                                      (co hen gio khoa 12h00 25/11/2026)
+
+CAU TRUC MOI CAU HOI TRONG JSON:
+  id, no, q (de bai), opts (cac phuong an), ans (chi so dap an dung),
+  tip (meo nho), t (chi so chu de)

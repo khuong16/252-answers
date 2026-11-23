@@ -1,0 +1,183 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Ôn luyện Trắc nghiệm – Chính trị</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#c8102e">
+<meta name="format-detection" content="telephone=no">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="styles.css"></head><body>
+<header class="top"><div class="wrap">
+  <button class="logo" id="homeBtn" type="button" aria-label="Về trang chủ"><span class="mark">★</span><span>Ôn luyện Trắc nghiệm<small>Chính trị · Sĩ quan & QNCN</small></span></button>
+  <div class="bankseg" role="group" aria-label="Chọn bộ câu hỏi">
+    <button type="button" data-bank="siquan" class="on">Sĩ quan</button>
+    <button type="button" data-bank="qncn">QNCN</button>
+  </div>
+  <div class="copy">Dữ liệu câu hỏi lưu trong <b>data/*.json</b></div>
+  <div class="top-right">
+    <button class="btn sm ghost" id="homeBtn2" type="button">🏠 Trang chủ</button>
+    <button class="ibtn" id="themeBtn" type="button" aria-label="Đổi giao diện sáng/tối">◐</button>
+  </div>
+</div></header>
+
+<main class="wrap">
+<!-- ===== HOME ===== -->
+<section class="screen" id="s-home">
+    <div class="iosbanner" id="iosBanner">📱 <span>Mở bằng <b>Safari</b> → nút <b>Chia sẻ</b> → <b>Thêm vào Màn hình chính</b> để dùng như ứng dụng, chạy toàn màn hình và không cần mạng.</span><button type="button" aria-label="Ẩn">✕</button></div>
+  <div class="hero">
+    <div class="hero-card">
+      <div class="eyebrow">Bộ câu hỏi đang chọn</div>
+      <h1 id="heroTitle"></h1>
+      <p>Luyện tập theo từng đoạn 50 câu, xem toàn bộ danh sách câu hỏi kèm đáp án, hoặc trộn đề kiểm tra 30 câu để tự thi và xuất file.</p>
+      <div class="hero-stats" id="heroStats"></div>
+    </div>
+    <div class="hist-card">
+      <h2>🕘 Lịch sử làm bài <button class="btn sm ghost" id="clearHist" type="button">Xoá</button></h2>
+      <ul class="hist" id="histList"></ul>
+      <div class="empty" id="histEmpty">Chưa có lượt làm bài nào.</div>
+    </div>
+  </div>
+  <div class="modes">
+    <button class="mode red" type="button" data-go="practice"><span class="ic">📚</span><h3>Luyện tập theo đoạn</h3><p>Mỗi đoạn 50 câu, chọn đáp án là biết đúng sai ngay, câu sai được tổng hợp để làm lại.</p><span class="go">Chọn đoạn bên dưới ↓</span></button>
+    <button class="mode" type="button" data-go="list"><span class="ic">📋</span><h3>Danh sách câu hỏi</h3><p>Xem toàn bộ câu hỏi theo thứ tự, tìm kiếm theo từ khoá, bật/tắt hiển thị đáp án, in ra giấy.</p><span class="go">Mở danh sách →</span></button>
+    <button class="mode gold" type="button" data-go="exam"><span class="ic">📝</span><h3>Trộn đề kiểm tra</h3><p>Ghép đề đúng cấu trúc thi chính thức (số câu từng chủ đề, 30 phút, thang điểm), làm bài có bấm giờ hoặc xuất ra file Word.</p><span class="go">Tạo đề →</span></button>
+    <button class="mode" type="button" data-go="tips"><span class="ic">💡</span><h3>Sổ tay mẹo nhớ</h3><p>Mỗi câu một mẹo ghi nhớ đáp án: từ khoá, chữ cái đầu, mẹo số, bẫy cần tránh. Xem theo chủ đề để ôn nhanh.</p><span class="go">Mở sổ tay →</span></button>
+  </div>
+  <p class="section-title">Luyện tập theo chủ đề · theo cấu trúc đề thi</p>
+  <div class="topics" id="topics"></div>
+  <p class="section-title">Luyện tập theo đoạn · 50 câu / đoạn</p>
+  <div class="segs" id="segs"></div>
+</section>
+
+<!-- ===== PRACTICE ===== -->
+<section class="screen" id="s-practice" hidden>
+  <div class="qbar">
+    <button class="btn sm" id="pBack" type="button">← Thoát</button>
+    <div><div class="title" id="pTitle"></div><div class="sub" id="pSub"></div></div>
+    <div class="prog"><i id="pProg"></i></div>
+    <span class="timer" id="pTimer">00:00</span>
+    <button class="mnav" type="button" data-sheet="practice">☷ <span id="pMini">0/50</span></button>
+  </div>
+  <div class="layout">
+    <div>
+      <article class="qcard">
+        <div class="tags" id="pTags"></div>
+        <p class="qtext" id="pQ"></p>
+        <ul class="opts" id="pOpts"></ul>
+        <div id="pFb"></div>
+        <div id="pTip"></div>
+        <div class="actions">
+          <button class="btn" id="pPrev" type="button">← Câu trước</button>
+          <button class="btn navy" id="pCheck" type="button" hidden>Kiểm tra</button>
+          <button class="btn ghost" id="pFlag" type="button">🚩 Đánh dấu</button>
+          <span class="spacer"></span>
+          <button class="btn primary" id="pNext" type="button">Câu tiếp →</button>
+        </div>
+      </article>
+    </div>
+    <aside class="side">
+      <div class="nav">
+        <h3>Điều hướng câu hỏi</h3>
+        <div class="meta"><span id="pDone"></span><span id="pRight"></span><span id="pWrong"></span></div>
+        <div class="cells" id="pCells"></div>
+        <div class="legend"><span><i style="background:var(--ok)"></i>Đúng</span><span><i style="background:var(--bad)"></i>Sai</span><span><i style="background:var(--navy-soft);border:1px solid var(--navy)"></i>Đã chọn</span><span><i style="background:var(--gold)"></i>Đánh dấu</span></div>
+        <label class="toggle" style="margin-top:10px"><input type="checkbox" id="pAuto" checked>Tự chuyển câu khi trả lời đúng</label>
+        <div class="navbtns"><button class="btn navy" id="pFinish" type="button">Kết thúc đoạn &amp; xem kết quả</button></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ===== LIST ===== -->
+<section class="screen" id="s-list" hidden>
+  <div class="toolbar">
+    <button class="btn sm" id="lBack" type="button">← Trang chủ</button>
+    <input type="search" id="lSearch" enterkeyhint="search" autocapitalize="off" placeholder="Tìm theo từ khoá trong câu hỏi hoặc phương án…" aria-label="Tìm kiếm">
+    <select id="lSeg" aria-label="Chọn đoạn"></select>
+    <select id="lTopic" aria-label="Chọn chủ đề"></select>
+    <label class="toggle"><input type="checkbox" id="lShow">Hiện đáp án</label>
+    <label class="toggle"><input type="checkbox" id="lTips">Hiện mẹo nhớ</label>
+    <span class="count" id="lCount"></span>
+    <button class="btn sm" id="lPrint" type="button">🖨 In</button>
+  </div>
+  <div class="qlist" id="qlist"></div>
+</section>
+
+<!-- ===== EXAM SETUP ===== -->
+<section class="screen" id="s-exam" hidden>
+  <div class="qbar"><button class="btn sm" id="eBack" type="button">← Trang chủ</button><div class="title">Trộn đề kiểm tra</div></div>
+  <div class="setup">
+    <div class="panel">
+      <h2>🖥 Làm bài trên máy</h2>
+      <p class="d">Ghép đề theo đúng cấu trúc thi chính thức của đối tượng đang chọn, hoặc tự chọn số câu.</p>
+      <div class="radio"><label><input type="radio" name="eMode" value="struct" checked>Theo cấu trúc đề thi chính thức</label><label><input type="radio" name="eMode" value="free">Tự chọn số câu</label></div>
+      <div class="struct" id="eStruct"></div>
+      <div class="row2" id="eFree" hidden>
+        <div class="field"><label>Số câu / đề</label><input type="number" id="eN" value="30" min="5" max="100"></div>
+        <div class="field"><label>Phạm vi câu hỏi</label><select id="eScope"></select></div>
+      </div>
+      <div class="field"><label>Thời gian (phút)</label><input type="number" id="eT" value="30" min="5" max="180"></div>
+      <label class="chk"><input type="checkbox" id="eShuffleOpts" checked>Trộn thứ tự phương án A/B/C/D</label>
+      <div class="actions"><button class="btn primary" id="eStart" type="button">▶ Bắt đầu làm bài</button></div>
+    </div>
+    <div class="panel">
+      <h2>📄 Xuất đề ra file</h2>
+      <p class="d">Tạo nhiều mã đề khác nhau, mỗi đề một file Word (.docx) để in; đáp án đặt ở trang cuối hoặc tách riêng.</p>
+      <div class="row2">
+        <div class="field"><label>Số đề cần tạo</label><input type="number" id="xCount" value="1" min="1" max="20"></div>
+        <div class="field"><label>Mã đề bắt đầu</label><input type="number" id="xStart" value="101" min="1"></div>
+      </div>
+      <div class="field"><label>Tiêu đề đề thi</label><input type="text" id="xTitle" value="ĐỀ KIỂM TRA NHẬN THỨC CHÍNH TRỊ" style="max-width:100%"></div>
+      <label class="chk"><input type="checkbox" id="xKey" checked>Kèm bảng đáp án ở cuối mỗi đề</label>
+      <label class="chk"><input type="checkbox" id="xKeyFile">Xuất thêm file đáp án tổng hợp riêng</label>
+      <div class="actions"><button class="btn navy" id="xGo" type="button">⬇ Tạo &amp; tải file</button><button class="btn" id="xPreview" type="button">👁 Xem trước 1 đề</button></div>
+      <p class="note">File .docx mở bằng Microsoft Word / LibreOffice. Cấu trúc đề, thời gian và trộn phương án dùng chung thiết lập bên trái; thứ tự câu trong đề đi theo thứ tự chủ đề của cấu trúc.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXAM TAKING ===== -->
+<section class="screen" id="s-taking" hidden>
+  <div class="qbar">
+    <button class="btn sm" id="tQuit" type="button">← Huỷ</button>
+    <div><div class="title" id="tTitle"></div><div class="sub" id="tSub"></div></div>
+    <div class="prog"><i id="tProg"></i></div>
+    <span class="timer" id="tTimer">30:00</span>
+    <button class="btn primary" id="tSubmit" type="button">Nộp bài</button>
+    <button class="mnav" type="button" data-sheet="taking">☷ <span id="tMini">0/30</span></button>
+  </div>
+  <div class="layout">
+    <div class="exam-list" id="tList"></div>
+    <aside class="side"><div class="nav"><h3>Phiếu trả lời</h3><div class="meta"><span id="tDone"></span></div><div class="cells" id="tCells"></div><div class="navbtns"><button class="btn primary" id="tSubmit2" type="button">Nộp bài</button></div></div></aside>
+  </div>
+</section>
+
+<!-- ===== RESULT ===== -->
+<section class="screen" id="s-result" hidden>
+  <div class="result">
+    <div class="score">
+      <div class="ring" id="rRing"><div><b id="rPct">0%</b><small id="rFrac"></small></div></div>
+      <div>
+        <h2 id="rTitle"></h2>
+        <div class="line" id="rLine"></div>
+        <div class="kpis" id="rKpis"></div>
+        <div class="actions">
+          <button class="btn primary" id="rRetry" type="button">🔁 Làm lại</button>
+          <button class="btn navy" id="rRetryWrong" type="button">Chỉ làm lại câu sai</button>
+          <button class="btn" id="rHome" type="button">Trang chủ</button>
+        </div>
+      </div>
+    </div>
+    <p class="section-title" style="margin-top:22px">Xem lại từng câu</p>
+    <div class="review" id="rReview"></div>
+  </div>
+</section>
+</main>
+
+<div class="sheetbg" id="sheetbg"></div>
+<div class="toast" id="toast"></div>
+<dialog id="dlg"><div class="dl"><h3 id="dlgT"></h3><p id="dlgP"></p><div class="acts"><button class="btn" id="dlgNo" type="button">Huỷ</button><button class="btn primary" id="dlgYes" type="button">Đồng ý</button></div></div></dialog>
+
+<script src="app.js"></script>
+</body></html>
